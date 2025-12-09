@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 import { type OpenMeteoResponse } from '../types/DashboardTypes';
 
 interface ChartUIProps {
-  data?: OpenMeteoResponse | null;
+  data: OpenMeteoResponse | null;
 }
 
 function listas(data: OpenMeteoResponse | null | undefined) {
@@ -20,13 +20,13 @@ export default function ChartUI({ data }: ChartUIProps) {
    return (
       <>
          <Typography variant="h5" component="div">
-            Chart arrLabels vs arrValues1 & arrValues2
+            fecha vs temperatura (2m) & velocidad del viento (10m)
          </Typography>
          <LineChart
             height={300}
             series={[
-               { data: listas(data).temperature_2m, label: 'value1'},
-               { data: listas(data).wind_speed_10m, label: 'value2'},
+               { data: listas(data).temperature_2m, label: 'Temperatura (2m)'},
+               { data: listas(data).wind_speed_10m, label: 'Velocidad del viento (10m)' },
             ]}
             xAxis={[{ scaleType: 'point', data: listas(data).time }]}
          />
