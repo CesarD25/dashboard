@@ -12,24 +12,33 @@ function combineArrays(arrLabels: Array<string>, arrValues1: Array<number>, arrV
 }
 
 interface TableUIProps {
-  data: OpenMeteoResponse | null;
+  data?: OpenMeteoResponse | null;
+}
+
+function formatTimeLabel(ts?: string) {
+   if (!ts) return '';
+   const d = new Date(ts);
+   if (isNaN(d.getTime())) return ts;
+   const hours = String(d.getHours()).padStart(2, '0');
+   const minutes = String(d.getMinutes()).padStart(2, '0');
+   return `${hours}:${minutes}`;
 }
 
 function listas(data: OpenMeteoResponse | null | undefined): [string[], number[], number[]] {
-    if (!data) {
-        return [[], [], []];
-    }
-    let temperature_2m=data.hourly.temperature_2m.slice(0,7)   ;
-    let wind_speed_10m=data.hourly.wind_speed_10m.slice(0,7);
-    let time=data.hourly.time.slice(0,7);
-    return [time, temperature_2m, wind_speed_10m];
+   if (!data) {
+      return [[], [], []];
+   }
+   const temperature_2m = data.hourly.temperature_2m.slice(0,15);
+   const wind_speed_10m = data.hourly.wind_speed_10m.slice(0,15);
+   const time = data.hourly.time.slice(0,15).map(t => formatTimeLabel(t));
+   return [time, temperature_2m, wind_speed_10m];
 }
 
 const columns: GridColDef[] = [
    { field: 'id', headerName: 'ID', width: 50 },
    {
       field: 'label',
-      headerName: 'Fecha',
+      headerName: 'Fecha (Hoy)',
       width: 125,
    },
    {
@@ -48,7 +57,7 @@ const columns: GridColDef[] = [
       description: 'No es posible ordenar u ocultar esta columna.',
       sortable: false,
       hideable: false,
-      width: 100,
+      width: 125,
       valueGetter: (_, row) => `${row.label || ''} ${row.value1 || ''} ${row.value2 || ''}`,
    },
 ];
